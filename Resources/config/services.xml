@@ -5,15 +5,15 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="view.uaspecific.class">Xnni\MobileViewBundle\View\UserAgentSpecificViewListener</parameter>
+        <parameter key="view.uaspecific.class">Xnni\Bundle\MobileViewBundle\View\UserAgentSpecificViewListener</parameter>
         <parameter key="dua.class">Dua\Adapter\NetUserAgentMobileAdapter</parameter>
     </parameters>
 
     <services>
         <service id="view.uaspecific" class="%view.uaspecific.class%">
-            <tag name="kernel.listener" event="onCoreRequest" />
-            <tag name="kernel.listener" event="onCoreController" />
-            <tag name="kernel.listener" event="onCoreView" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
+            <tag name="kernel.event_listener" event="kernel.view" method="onKernelView" />
             <argument type="service" id="service_container" />
         </service>
 

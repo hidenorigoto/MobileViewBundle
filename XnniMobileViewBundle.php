@@ -1,6 +1,6 @@
 <?php
 
-namespace Xnni\MobileViewBundle;
+namespace Xnni\Bundle\MobileViewBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

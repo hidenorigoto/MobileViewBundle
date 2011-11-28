@@ -1,6 +1,6 @@
 <?php
 
-namespace Xnni\MobileViewBundle\DependencyInjection;
+namespace Xnni\Bundle\MobileViewBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -31,20 +31,5 @@ class XnniMobileViewExtension extends Extension
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
-    }
-
-    /**
-     * Returns the base path for the XSD files.
-     *
-     * @return string The XSD base path
-     */
-    public function getXsdValidationBasePath()
-    {
-        return __DIR__.'/../Resources/config/schema';
-    }
-
-    public function getNamespace()
-    {
-        return 'http://innx.co.jp/schema/dic/mobile_view';
     }
 }

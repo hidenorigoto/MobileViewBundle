@@ -1,6 +1,5 @@
 <?php
-
-namespace Xnni\MobileViewBundle\View;
+namespace Xnni\Bundle\MobileViewBundle\View;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -14,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @author hidenorigoto <hidenorigoto@gmail.com>
  *
  * Original code are written by Fabien Potencier for SensioFrameworkExtraBundle https://github.com/sensio/SensioFrameworkExtraBundle
+ *
  * This file is part of the Symfony framework.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
@@ -45,9 +45,11 @@ class UserAgentSpecificViewListener
     }
 
     /**
+     * kernel.request event handler
+     *
      * @param GetResponseEvent $event
      */
-    public function onCoreRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
         $ua = $this->container->get('dua')
@@ -57,11 +59,13 @@ class UserAgentSpecificViewListener
     }
 
     /**
+     * kernel.contoller event handler
+     *
      * Store the contoller information in the request for later use
      *
      * @param FilterControllerEvent $event A FilterControllerEvent instance
      */
-    public function onCoreController(FilterControllerEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
         // Now we handle the class/method style controllers
         // (Closure is not supported)
@@ -75,12 +79,14 @@ class UserAgentSpecificViewListener
     }
 
     /**
+     * kernel.view event handler
+     *
      * Renders the template and initializes a new response object with the
      * rendered template content.
      *
      * @param GetResponseForControllerResultEvent $event A GetResponseForControllerResultEvent instance
      */
-    public function onCoreView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request    = $event->getRequest();
         $parameters = $event->getControllerResult();
@@ -129,8 +135,9 @@ class UserAgentSpecificViewListener
             $viewName = $match[1].':'.substr($controllerMethodName, 0, -6);
         }
 
-        $viewName .= '_'.$ua;
-        $viewName = str_replace('_nonmobile', '', $viewName);
+        if ('nonmobile' !== $ua) {
+            $viewName .= '_'.$ua;
+        }
 
         $bundle = $this->getBundleForClass($controllerClassName);
 
@@ -141,7 +148,7 @@ class UserAgentSpecificViewListener
      * Returns the Bundle instance in which the given class name is located.
      *
      * @param string $class A fully qualified controller class name
-     * @param Bundle $bundle A Bundle instance
+     * @return Bundle $bundle A Bundle instance
      * @throws \InvalidArgumentException
      */
     protected function getBundleForClass($class)

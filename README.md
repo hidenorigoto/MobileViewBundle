@@ -15,7 +15,6 @@ Install
 
 Gets the libraries from GitHub.
 
-.. code-block: bash
 
     $ git submodule add -f git://github.com/hidenorigoto/MobileViewBundle.git vendor/bundles/Xnni/MobileViewBundle
     $ git submodule add -f git://github.com/hidenorigoto/Dua.git vendor/dua
@@ -23,7 +22,6 @@ Gets the libraries from GitHub.
 
 Setup autoload
 
-.. code-block: php
 
     $loader->registerNamespaces(array(
         // add namespaces as follows
@@ -41,4 +39,29 @@ Setup autoload
         .PATH_SEPARATOR.__DIR__.'/../vendor/net-useragent-mobile/src'
     );
 
+
+Usage
+=====
+
+1. Prepare templates for smartphone with filename 'index_iphone.html.twig'.
+2. In the action, you only need to return the parameter array as follows:
+
+    return array();
+
+   Template filename is guessed automatically.
+
+    index.html.twig - with any PC browser
+    index_iphone.html.twig - with iPhone or any smartphone
+
+
+LISENCE
+=======
+
+MIT
+
+
+CHANGELOG
+=========
+
+- 2011/11/28 supports Symfony 2.0.6
 
