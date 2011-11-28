@@ -88,6 +88,7 @@ class UserAgentSpecificViewListenerTest extends WebTestCase
      */
     public function testGuessTemplateName($viewname, $ua, $controllerName, $methodName, $expected)
     {
+        echo $ua;
         $listener = \Phake::partialMock('Xnni\Bundle\MobileViewBundle\View\UserAgentSpecificViewListener', static::$kernel->getContainer());
         $bundleMock = \Phake::mock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
         \Phake::when($bundleMock)->getName()->thenReturn('bundlename');
@@ -99,18 +100,19 @@ class UserAgentSpecificViewListenerTest extends WebTestCase
         $class = new \ReflectionClass('Xnni\Bundle\MobileViewBundle\View\UserAgentSpecificViewListener');
         $method = $class->getMethod('guessTemplateName');
         $method->setAccessible(true);
-        $templateName = $method->invokeArgs($listener, array('viewname', 'nonmobile', 'controller', 'method', $request));
+        $templateName = $method->invokeArgs($listener, array($viewname, $ua, $controllerName, $methodName, $request));
 
-        $this->assertEquals('bundlename:viewname.format.twig', $templateName);
+        $this->assertEquals($expected, $templateName);
     }
 
     public function guessTemplateNameProvider()
     {
         return array(
             array('viewname', 'nonmobile', '', '', 'bundlename:viewname.format.twig'),
-            array('viewname', 'iphone', '', '', 'bundlename:viewname_iphone.format.twig'),
-            array('', 'nonmobile', 'AcmeTestBundle\Controller\TestController', 'indexAction', 'bundlename:test:index.format.twig'),
-            array('', 'iphone', 'AcmeTestBundle\Controller\TestController', 'indexAction', 'bundlename:test:index_iphone.format.twig'),
+            array('viewname', 'iphone', '', '', 'bundlename:viewname_s.format.twig'),
+            array('viewname', 'docomo', '', '', 'bundlename:viewname_k.format.twig'),
+            array('', 'nonmobile', 'AcmeTestBundle\Controller\TestController', 'indexAction', 'bundlename:Test:index.format.twig'),
+            array('', 'iphone', 'AcmeTestBundle\Controller\TestController', 'indexAction', 'bundlename:Test:index_s.format.twig'),
         );
     }
 

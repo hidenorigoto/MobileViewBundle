@@ -35,6 +35,18 @@ class UserAgentSpecificViewListener
     protected $container;
 
     /**
+     * @var mixed
+     */
+    protected $uaMap = array(
+        'nonmobile' => '',
+        'docomo'    => 'k',
+        'softbank'  => 'k',
+        'ezweb'     => 'k',
+        'willcom'   => 'k',
+        'iphone'    => 's',
+    );
+
+    /**
      * Constructor.
      *
      * @param ContainerInterface $container The service container instance
@@ -43,6 +55,17 @@ class UserAgentSpecificViewListener
     {
         $this->container = $container;
     }
+
+    /**
+     * Sets uaMap
+     *
+     * @param mixed $uaMap
+     */
+    public function setUaMap($uaMap)
+    {
+        $this->uaMap = $uaMap;
+    }
+
 
     /**
      * kernel.request event handler
@@ -128,15 +151,19 @@ class UserAgentSpecificViewListener
     {
         if (!$viewName) {
             if (!preg_match('/Controller\\\(.*)Controller$/', $controllerClassName, $match)) {
-                throw new \InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it does not end with Controller)', get_class($controller[0])));
+                throw new \InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it does not end with Controller)',
+                    get_class($controller[0])));
             }
 
-            //
+            // concatinate and remove 'Action' suffix
             $viewName = $match[1].':'.substr($controllerMethodName, 0, -6);
         }
 
-        if ('nonmobile' !== $ua) {
-            $viewName .= '_'.$ua;
+        // converts $ua using mapping array
+        $mappedUa = $this->mapUa($ua);
+
+        if ($mappedUa) {
+            $viewName .= '_'.$mappedUa;
         }
 
         $bundle = $this->getBundleForClass($controllerClassName);
@@ -161,6 +188,18 @@ class UserAgentSpecificViewListener
         }
 
         throw new \InvalidArgumentException(sprintf('The "%s" class does not belong to a registered bundle.', $class));
+    }
+
+    /**
+     * Converts ua using mapping
+     */
+    protected function mapUa($ua)
+    {
+        return 's';
+        if (!$this->uaMap) return $ua;
+        if (isset($this->uaMap[$ua])) return $this->uaMap[$ua];
+
+        return $ua;
     }
 }
 
