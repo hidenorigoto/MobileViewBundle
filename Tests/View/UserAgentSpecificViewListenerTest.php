@@ -88,7 +88,6 @@ class UserAgentSpecificViewListenerTest extends WebTestCase
      */
     public function testGuessTemplateName($viewname, $ua, $controllerName, $methodName, $expected)
     {
-        echo $ua;
         $listener = \Phake::partialMock('Xnni\Bundle\MobileViewBundle\View\UserAgentSpecificViewListener', static::$kernel->getContainer());
         $bundleMock = \Phake::mock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
         \Phake::when($bundleMock)->getName()->thenReturn('bundlename');

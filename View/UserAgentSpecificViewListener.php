@@ -195,7 +195,6 @@ class UserAgentSpecificViewListener
      */
     protected function mapUa($ua)
     {
-        return 's';
         if (!$this->uaMap) return $ua;
         if (isset($this->uaMap[$ua])) return $this->uaMap[$ua];
 
